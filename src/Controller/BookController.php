@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Book;
-use App\Transformer\BookTransformer;
+use App\Form\BookType;
+use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -22,10 +24,23 @@ class BookController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="json")
+     * @Route("/new", name="new")
      */
-    public function getJson(Book $book, BookTransformer $transformer)
+    public function new(Request $request): Response
     {
-        return $this->json($transformer->getJson($book));
+        $form = $this->createForm(BookType::class, new Book());
+        $form->handleRequest($request);
+
+        return $this->render('book/new.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/{isbn}", name="isbn", requirements={"isbn": "\w+"})
+     */
+    public function getByIsbn(Request $request, BookRepository $repository)
+    {
+        $book = $repository->findOneBy(['isbn' => $request->attributes->get('isbn')]);
+
+        return $this->json($book);
     }
 }

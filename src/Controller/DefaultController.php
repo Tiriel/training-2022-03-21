@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\ContactType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,13 +19,17 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/contact", name="app_default_contact", methods={"GET"})
+     * @Route("/contact", name="app_default_contact", methods={"GET", "POST"})
      */
     public function contact(Request $request): Response
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/DefaultController.php',
-        ]);
+        $form = $this->createForm(ContactType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            dd($form->getData());
+        }
+
+        return $this->render('default/contact.html.twig', ['form' => $form->createView()]);
     }
 }
