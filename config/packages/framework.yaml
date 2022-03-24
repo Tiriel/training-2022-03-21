@@ -17,6 +17,13 @@ framework:
     php_errors:
         log: true
 
+    http_client:
+        scoped_clients:
+            omdb.client:
+                base_uri: 'http://www.omdbapi.com'
+                query:
+                    apikey: '%env(OMDB_API_KEY)%'
+
 when@test:
     framework:
         test: true

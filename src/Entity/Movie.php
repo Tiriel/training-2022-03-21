@@ -6,9 +6,11 @@ use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=MovieRepository::class)
+ * @UniqueEntity({"title", "omdbId"})
  */
 class Movie
 {
@@ -45,9 +47,19 @@ class Movie
     private $price;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Genre::class, inversedBy="movies", fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity=Genre::class, inversedBy="movies", fetch="EAGER", cascade={"persist"})
      */
     private $genres;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $rated;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $omdbId;
 
     public function __construct()
     {
@@ -139,6 +151,30 @@ class Movie
     public function removeGenre(Genre $genre): self
     {
         $this->genres->removeElement($genre);
+
+        return $this;
+    }
+
+    public function getRated(): ?string
+    {
+        return $this->rated;
+    }
+
+    public function setRated(?string $rated): self
+    {
+        $this->rated = $rated;
+
+        return $this;
+    }
+
+    public function getOmdbId(): ?string
+    {
+        return $this->omdbId;
+    }
+
+    public function setOmdbId(?string $omdbId): self
+    {
+        $this->omdbId = $omdbId;
 
         return $this;
     }

@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Fetcher\MovieFetcher;
 use App\Form\MovieType;
 use App\Repository\MovieRepository;
+use App\Transformer\MovieTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,10 +48,12 @@ class MovieController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_movie_show", methods={"GET"})
+     * @Route("/{title}", name="app_movie_show", methods={"GET"})
      */
-    public function show(Movie $movie): Response
+    public function show(string $title, MovieFetcher $fetcher): Response
     {
+        $movie = $fetcher->fetchMovieByTitle($title);
+
         return $this->render('movie/show.html.twig', [
             'movie' => $movie,
         ]);

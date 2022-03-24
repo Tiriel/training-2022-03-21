@@ -17,7 +17,7 @@
             </tr>
             <tr>
                 <th>Poster</th>
-                <td>{{ movie.poster }}</td>
+                <td><img src="{{ movie.poster }}"></td>
             </tr>
             <tr>
                 <th>Country</th>
@@ -34,9 +34,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_movie_index') }}">back to list</a>
+    <a class="btn btn-secondary" href="{{ path('app_movie_index') }}">back to list</a>
 
-    <a href="{{ path('app_movie_edit', {'id': movie.id}) }}">edit</a>
+    <a class="btn btn-primary" href="{{ path('app_movie_edit', {'id': movie.id}) }}">edit</a>
 
     {{ include('movie/_delete_form.html.twig') }}
 {% endblock %}
